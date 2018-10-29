@@ -1,11 +1,12 @@
 import ajaxAsync from './ajaxAsync'
 import dateFtt from './dateFtt'
 import ajaxAsyncChz from './ajaxAsyncChz'
+import ajaxAsyncICCard from './ajaxAsyncICCard'
 import nativePlugin from './plugins/nativePlugin'
 
 export default ajaxAsync
 
-export { ajaxAsyncChz, broswer, dateFtt }
+export { ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
 
 export { getUrlParams, getUrlParamByKey } from './getUrlParams'
 
@@ -19,7 +20,8 @@ export {
   compareDate,
   compareDate2,
   generateQueryStr,
-  isAndroid
+  isAndroid,
+  startWith
 } from './util'
 
 export {
@@ -29,7 +31,8 @@ export {
   popToHome,
   OpenURLByAppFormate,
   goByUsualUrl,
-  goLogin
+  goLogin,
+  jumpUrlByTel
 } from './xiaobuAppUtils'
 
 export { nativePlugin }

@@ -1,4 +1,5 @@
 import { getUrlParamArr } from './util'
+import { startWith } from './util'
 
 /**
  * 获取缓存中的用户信息。已Object形式返回。
@@ -38,8 +39,8 @@ function getUserInfo() {
  */
 function OpenURLByAppFormate(url) {
   if (
-    url.toLowerCase().startsWith('http') ||
-    url.toLowerCase().startsWith('xbapp://')
+    startWith(url.toLowerCase(), 'http') ||
+    startWith(url.toLowerCase(), 'xbapp://')
   ) {
     if (url.toLowerCase().indexOf('baidu') === -1) {
       if (url.indexOf('?') === -1) url += '?'
@@ -85,7 +86,7 @@ function objIsNullUtil(obj) {
 function validModuleUrl(moduleUrl) {
   console.log('validModuleUrl')
   if (!stringIsEmptyUtil(moduleUrl)) {
-    if (moduleUrl.startsWith('module=')) {
+    if (startWith(moduleUrl, 'module=')) {
       let url = parseToUrl(moduleUrl)
       return url
     } else return moduleUrl
@@ -226,13 +227,29 @@ function appendParamsBaseByQMark(url, key, value) {
  * @param {String} type 跳转方式，'pop','open';默认为open
  */
 function go(url, type) {
-  if (!needToLogin(url)) {
-    url = validModuleUrl(url)
-    url = appendParamsBase(url, type)
-    console.log(url)
+  if (url.indexOf('http') > -1) {
     window.location.assign(url)
   } else {
-    goLogin()
+    if (url.indexOf('xbapp://open/') > -1) {
+      url = url.substring(url.indexOf('xbapp://open/') + 13)
+    }
+    if (runningPlat() === 3) {
+      if (url.substring(0, url.indexOf('.html')).indexOf('/') > 0) {
+        url = '.' + url.substring(url.indexOf('/'))
+      }
+    }
+    if (!needToLogin(url)) {
+      url = validModuleUrl(url)
+      url = appendParamsBase(url, type)
+      console.log(url)
+      if (window.prodInApp) {
+        window.location.assign(url)
+      } else {
+        window.alert(`open=>${url}`)
+      }
+    } else {
+      goLogin()
+    }
   }
 }
 
@@ -372,6 +389,19 @@ function runningPlat() {
   }
 }
 
+/**
+ * 跳转URL带电话号码
+ *
+ * @param {Boolean} needLogin 是否需要登录，true为需要，false为不需要
+ * @param {String} url 跳转目标url
+ */
+function jumpUrlByTel(needLogin, url) {
+  if (needLogin && getUserInfo().IS_LOGIN !== '1') {
+    goLogin()
+  } else {
+    window.location.assign(`${url}${getUserInfo().PHONE}`)
+  }
+}
 export {
   go,
   gobackNoParams,
@@ -380,5 +410,6 @@ export {
   OpenURLByAppFormate,
   goByUsualUrl,
   goLogin,
-  getUserInfo
+  getUserInfo,
+  jumpUrlByTel
 }

@@ -1,6 +1,7 @@
 import ajaxAsync from './ajaxAsync'
 import dateFtt from './dateFtt'
 import ajaxAsyncChz from './ajaxAsyncChz'
+import ajaxAsyncICCard from './ajaxAsyncICCard'
 // import broswer from './broswer'
 
 import Vue from 'vue'
@@ -15,7 +16,7 @@ import WX from './plugins/weixin/wx'
 
 export default ajaxAsync
 
-export { ajaxAsyncChz, dateFtt }
+export { ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
 // export { broswer }
 
 export { getUrlParams, getUrlParamByKey } from './getUrlParams'
@@ -30,7 +31,8 @@ export {
   compareDate,
   compareDate2,
   generateQueryStr,
-  isAndroid
+  isAndroid,
+  startWith
 } from './util'
 
 export {
@@ -40,7 +42,8 @@ export {
   popToHome,
   OpenURLByAppFormate,
   goByUsualUrl,
-  goLogin
+  goLogin,
+  jumpUrlByTel
 } from './xiaobuAppUtils'
 
 // export { nativePlugin } from './plugins/nativePlugin'

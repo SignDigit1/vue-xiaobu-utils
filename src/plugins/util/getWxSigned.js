@@ -40,7 +40,8 @@ const jsApiList = [
 const appid = window.appid
 let sessionID = localStorage.getItem('XIAOBUSESSION')
 let url = window.location.href
-if (url && url.includes('#')) {
+// if (url && url.includes('#')) {
+if (url && url.indexOf('#') > -1) {
   url = url.split('#')[0]
 }
 /**

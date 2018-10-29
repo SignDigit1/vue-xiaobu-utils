@@ -170,6 +170,25 @@ function isAndroid() {
   return isAndroid
 }
 
+/**
+ *
+ * 字符串是否已目标字符开始
+ * @param {String} s 原字符串
+ * @param {String} c 需包含的字符
+ * @returns {Boolean}
+ */
+function startWith(s, c) {
+  if (c === null || c === '' || s.length === 0 || c.length > s.length) {
+    return false
+  }
+  if (s.substr(0, c.length) === c) {
+    return true
+  } else {
+    return false
+  }
+  //   return true
+}
+
 export {
   getUrlParamArr,
   replaceParentheses,
@@ -180,5 +199,6 @@ export {
   compareDate,
   compareDate2,
   generateQueryStr,
-  isAndroid
+  isAndroid,
+  startWith
 }

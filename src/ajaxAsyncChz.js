@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { startWith } from './util'
 // import { goLogin } from './xiaobuAppUtils'
 axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
 
@@ -245,16 +246,16 @@ var ajaxAsyncChz = function(urlString, sendObj, method = 'get', autoEx = true) {
 //   }
 // }
 
-var startWith = function(s, c) {
-  if (c === null || c === '' || s.length === 0 || c.length > s.length) {
-    return false
-  }
-  if (s.substr(0, c.length) === c) {
-    return true
-  } else {
-    return false
-  }
-  //   return true
-}
+// var startWith = function(s, c) {
+//   if (c === null || c === '' || s.length === 0 || c.length > s.length) {
+//     return false
+//   }
+//   if (s.substr(0, c.length) === c) {
+//     return true
+//   } else {
+//     return false
+//   }
+//   //   return true
+// }
 
 export default ajaxAsyncChz

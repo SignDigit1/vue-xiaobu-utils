@@ -78,6 +78,15 @@ declare function generateQueryStr(queryObj: Object): String
  */
 declare function isAndroid(): Boolean
 
+/**
+ *
+ * 字符串是否已目标字符开始
+ * @param {String} s 原字符串
+ * @param {String} c 需包含的字符
+ * @returns {Boolean}
+ */
+declare function startWith(s: String, c: String): Boolean
+
 export {
   getUrlParamArr,
   replaceParentheses,
@@ -88,5 +97,6 @@ export {
   compareDate,
   compareDate2,
   generateQueryStr,
-  isAndroid
+  isAndroid,
+  startWith
 }

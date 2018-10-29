@@ -47,8 +47,9 @@ declare function goByUsualUrl(url: String): void
 declare function goLogin(backtoroot: false): void
 
 /**
- * 获取缓存中的用户信息。已Object形式返回。
- * userObj:{
+ *
+ * 获取缓存中用户信息
+ * @returns {Object} userObj:{
  * IS_LOGIN:"1",
  * NICK_NAME:"猫罐頭",
  * SEX:"1", "ADDR":"",
@@ -64,7 +65,15 @@ declare function goLogin(backtoroot: false): void
  * SESSION:"4SHI6OITDEIJN4JIUCFB0G1JVRJT8QPC
 "}
  */
-declare function getUserInfo(): void
+declare function getUserInfo(): Object
+
+/**
+ * 跳转URL带电话号码
+ *
+ * @param {Boolean} needLogin 是否需要登录，true为需要，false为不需要
+ * @param {String} url 跳转目标url
+ */
+declare function jumpUrlByTel(needLogin: Boolean, url: String): void
 
 export {
   go,
@@ -74,5 +83,6 @@ export {
   OpenURLByAppFormate,
   goByUsualUrl,
   goLogin,
-  getUserInfo
+  getUserInfo,
+  jumpUrlByTel
 }
