@@ -58,15 +58,17 @@ function ajaxAsyncICCard(urlString, sendObj, autoEx = true) {
         if (response.data.ResponseStatus.ErrorCode === 'OK') {
           return response
         } else {
-          var toastMsg = response.data.ResponseStatus.Errors[0].Message
-          var logMsg = response.data.ResponseStatus.Errors[0].Message
+          if (autoEx) {
+            var toastMsg = response.data.ResponseStatus.Errors[0].Message
+            var logMsg = response.data.ResponseStatus.Errors[0].Message
 
-          if (toastMsg.length > 0) {
-            toastFunction(toastMsg)
-          }
+            if (toastMsg.length > 0) {
+              toastFunction(toastMsg)
+            }
 
-          if (logMsg.length > 0) {
-            console.error(logMsg)
+            if (logMsg.length > 0) {
+              console.error(logMsg)
+            }
           }
         }
         throw response
