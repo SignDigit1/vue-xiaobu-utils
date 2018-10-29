@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { goLogin } from './xiaobuAppUtils'
-import { startWith } from './util'
+import { goLogin } from '../xiaobuAppUtils'
+import { startWith } from '../util'
 
 let api = window.api
 let token = window.token
@@ -32,7 +32,9 @@ function ajaxAsync(urlString, sendObj, autoEx = true) {
     url = '/' + url
   }
   url = url + '?token=' + token
-  sessionID = window.localStorage.getItem('XIAOBUSESSION').trim()
+  if (window.localStorage.getItem('XIAOBUSESSION')) {
+    sessionID = window.localStorage.getItem('XIAOBUSESSION').trim()
+  }
   if (sessionID === null || sessionID === '' || sessionID === 'null') {
     sessionID = ''
     console.log(

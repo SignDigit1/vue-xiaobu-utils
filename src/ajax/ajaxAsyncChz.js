@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { startWith } from './util'
+import { startWith } from '../util'
 // import { goLogin } from './xiaobuAppUtils'
 axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
 

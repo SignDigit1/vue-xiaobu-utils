@@ -1,12 +1,12 @@
-import ajaxAsync from './ajaxAsync'
+import ajaxAsync from './ajax/ajaxAsync'
 import dateFtt from './dateFtt'
-import ajaxAsyncChz from './ajaxAsyncChz'
-import ajaxAsyncICCard from './ajaxAsyncICCard'
+import ajaxAsyncChz from './ajax/ajaxAsyncChz'
+import ajaxAsyncICCard from './ajax/ajaxAsyncICCard'
 import nativePlugin from './plugins/nativePlugin'
 
 export default ajaxAsync
 
-export { ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
+export {ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
 
 export { getUrlParams, getUrlParamByKey } from './getUrlParams'
 
