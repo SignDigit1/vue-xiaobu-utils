@@ -1,5 +1,5 @@
 import ajaxAsync from './ajax/ajaxAsync'
-import dateFtt from './dateFtt'
+import dateFtt from './time/dateFtt'
 import ajaxAsyncChz from './ajax/ajaxAsyncChz'
 import ajaxAsyncICCard from './ajax/ajaxAsyncICCard'
 // import broswer from './broswer'
@@ -19,21 +19,21 @@ export default ajaxAsync
 export { ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
 // export { broswer }
 
-export { getUrlParams, getUrlParamByKey } from './getUrlParams'
+export { getUrlParams, getUrlParamByKey } from './url/getUrlParams'
 
 export {
-  getUrlParamArr,
+  // getUrlParamArr,
   replaceParentheses,
   storeNewToOldNoRepetition,
   setTitle,
   generateParentheses,
   // log,
-  compareDate,
-  compareDate2,
   generateQueryStr,
   isAndroid,
   startWith
 } from './util'
+
+export { compareDateHHmmss, compareDateyyyyMMdd } from './time/compareDate'
 
 export {
   go,
@@ -46,6 +46,8 @@ export {
   jumpUrlByTel,
   getUserInfo
 } from './xiaobuAppUtils'
+
+export { isValidatedAllIdcard } from './validotor/idCardValidotor'
 
 // export { nativePlugin } from './plugins/nativePlugin'
 

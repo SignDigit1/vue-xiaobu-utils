@@ -1,11 +1,11 @@
-/**
- * 获取某一路由参数的数组
- *
- * @param {string} originStr 源字符串
- * @param {string} param 参数名
- * @returns {Array<string>} param数组
- */
-declare function getUrlParamArr(originStr: String, param: String): Array<string>
+// /**
+//  * 获取某一路由参数的数组
+//  *
+//  * @param {string} originStr 源字符串
+//  * @param {string} param 参数名
+//  * @returns {Array<string>} param数组
+//  */
+// declare function getUrlParamArr(originStr: String, param: String): Array<string>
 
 /**
  * 替换括号
@@ -45,24 +45,6 @@ declare function setTitle(title: String): void
 declare function generateParentheses(originStr: String): String
 
 /**
- * 时间比较(HH:mm:ss)
- *
- * @param {String} startDate
- * @param {String} endDate
- * @returns {Boolean}
- */
-declare function compareDate(startDate: String, endDate: String): Boolean
-
-/**
- * 时间比较(yyyy-MM-dd)
- *
- * @param {String} startDate
- * @param {String} endDate
- * @returns {Boolean}
- */
-declare function compareDate2(startDate: String, endDate: String): Boolean
-
-/**
  * 生成查询字符串
  *
  * @export
@@ -88,14 +70,12 @@ declare function isAndroid(): Boolean
 declare function startWith(s: String, c: String): Boolean
 
 export {
-  getUrlParamArr,
+  // getUrlParamArr,
   replaceParentheses,
   storeNewToOldNoRepetition,
   setTitle,
   generateParentheses,
   // log,
-  compareDate,
-  compareDate2,
   generateQueryStr,
   isAndroid,
   startWith

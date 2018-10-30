@@ -1,22 +1,22 @@
-/**
- * 获取某一路由参数的数组
- *
- * @param {string} originStr 源字符串
- * @param {string} param 参数名
- * @returns {Array<string>} param数组
- */
-function getUrlParamArr(originStr, param) {
-  let regStr = new RegExp(`[\\?\\&]${param}=[^#\\&]*`, 'gi')
-  if (!originStr || originStr === '') {
-    return []
-  }
-  let arr = originStr.match(regStr)
-  if (arr) {
-    return arr.map(i => decodeURI(i.substring(i.indexOf('=') + 1)))
-  } else {
-    return []
-  }
-}
+// /**
+//  * 获取某一路由参数的数组
+//  *
+//  * @param {string} originStr 源字符串
+//  * @param {string} param 参数名
+//  * @returns {Array<string>} param数组
+//  */
+// function getUrlParamArr(originStr, param) {
+//   let regStr = new RegExp(`[\\?\\&]${param}=[^#\\&]*`, 'gi')
+//   if (!originStr || originStr === '') {
+//     return []
+//   }
+//   let arr = originStr.match(regStr)
+//   if (arr) {
+//     return arr.map(i => decodeURI(i.substring(i.indexOf('=') + 1)))
+//   } else {
+//     return []
+//   }
+// }
 /**
  * 替换括号
  *
@@ -111,44 +111,7 @@ function setTitle(title) {
 // function log(string) {
 //   if (!window.isProd) console.log(string)
 // }
-/**
- * 时间比较(HH:mm:ss)
- *
- * @param {String} startDate
- * @param {String} endDate
- * @returns
- */
-function compareDate(startDate, endDate) {
-  var arrStart = startDate.split(':')
-  var startTime = new Date(arrStart[0], arrStart[1], arrStart[2])
-  var startTimes = startTime.getTime()
-  var arrEnd = endDate.split(':')
-  var endTime = new Date(arrEnd[0], arrEnd[1], arrEnd[2])
-  var endTimes = endTime.getTime()
-  if (endTimes < startTimes) {
-    return false
-  }
-  return true
-}
-/**
- * 时间比较(yyyy-MM-dd)
- *
- * @param {String} startDate
- * @param {String} endDate
- * @returns
- */
-function compareDate2(startDate, endDate) {
-  var arrStart = startDate.split('-')
-  var startTime = new Date(arrStart[0], arrStart[1], arrStart[2])
-  var startTimes = startTime.getTime()
-  var arrEnd = endDate.split('-')
-  var endTime = new Date(arrEnd[0], arrEnd[1], arrEnd[2])
-  var endTimes = endTime.getTime()
-  if (endTimes <= startTimes) {
-    return false
-  }
-  return true
-}
+
 /**
  * 生成查询字符串
  *
@@ -190,14 +153,12 @@ function startWith(s, c) {
 }
 
 export {
-  getUrlParamArr,
+  // getUrlParamArr,
   replaceParentheses,
   storeNewToOldNoRepetition,
   setTitle,
   generateParentheses,
   // log,
-  compareDate,
-  compareDate2,
   generateQueryStr,
   isAndroid,
   startWith
