@@ -43,7 +43,8 @@ export {
   OpenURLByAppFormate,
   goByUsualUrl,
   goLogin,
-  jumpUrlByTel
+  jumpUrlByTel,
+  getUserInfo
 } from './xiaobuAppUtils'
 
 // export { nativePlugin } from './plugins/nativePlugin'

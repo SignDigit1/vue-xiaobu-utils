@@ -6,7 +6,7 @@ import nativePlugin from './plugins/nativePlugin'
 
 export default ajaxAsync
 
-export {ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
+export { ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
 
 export { getUrlParams, getUrlParamByKey } from './getUrlParams'
 
@@ -32,7 +32,8 @@ export {
   OpenURLByAppFormate,
   goByUsualUrl,
   goLogin,
-  jumpUrlByTel
+  jumpUrlByTel,
+  getUserInfo
 } from './xiaobuAppUtils'
 
 export { nativePlugin }
