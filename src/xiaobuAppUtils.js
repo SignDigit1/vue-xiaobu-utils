@@ -1,5 +1,6 @@
-import { getUrlParamArr } from './util'
+// import { getUrlParamArr } from './util'
 import { startWith } from './util'
+import { getUrlParamByKey } from './url/getUrlParams'
 
 /**
  * 获取缓存中的用户信息。已Object形式返回。
@@ -190,8 +191,10 @@ function appendParamsBase(url, type) {
   } else {
     urlWithParams = url
   }
-  let tvParams = getUrlParamArr(url, '_tv')
-  if (tvParams.length <= 0) {
+  // let tvParams = getUrlParamArr(url, '_tv')
+  // if (tvParams.length <= 0) {
+  let tvParams = getUrlParamByKey('_tv')
+  if (tvParams) {
     urlWithParams += appendParamsBaseByQMark(urlWithParams, '_tv', 'true')
   }
   urlWithParams += appendParamsBaseByQMark(urlWithParams, '_rv', 'false')
