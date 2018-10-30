@@ -1,7 +1,7 @@
 {
   "name": "vue-xiaobu-utils",
   "description": "小步科技工具js",
-  "version": "1.4.21",
+  "version": "1.4.22",
   "author": "SignDigit1 <37820612+SignDigit1@users.noreply.github.com>",
   "main": "src/index.js",
   "types": "src/index.d.ts",

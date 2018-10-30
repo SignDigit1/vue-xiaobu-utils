@@ -245,11 +245,11 @@ function go(url, type) {
       url = validModuleUrl(url)
       url = appendParamsBase(url, type)
       console.log(url)
-      if (window.prodInApp) {
-        window.location.assign(url)
-      } else {
-        window.alert(`open=>${url}`)
-      }
+      // if (window.prodInApp) {
+      window.location.assign(url)
+      // } else {
+      //   window.alert(`open=>${url}`)
+      // }
     } else {
       goLogin()
     }
