@@ -5,8 +5,8 @@
 let getUrlParams = function(uri) {
   var url
   // 指定链接
-  if (uri) url = decodeURIComponent(uri)
-  else url = decodeURIComponent(location.search) // 获取当前页面url中"?"符后的字串
+  if (uri) url = decodeURIComponent(uri).substr(url.indexOf('?'))
+  else url = decodeURIComponent(window.location.search) // 获取当前页面url中"?"符后的字串
   var theParams = {}
   if (url.indexOf('?') !== -1) {
     var str = url.substr(1)

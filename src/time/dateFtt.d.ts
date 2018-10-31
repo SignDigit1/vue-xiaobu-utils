@@ -6,4 +6,13 @@
  * @returns {String}
  */
 declare function dateFtt(fmt: String, date: String | Date): String
-export default dateFtt
+
+/**
+ *
+ * 格式化无间隔日期
+ * @param {String} tradeDate 例：20181031
+ * @param {String} tradeTime 例：182900
+ * @returns {Date}
+ */
+declare function formatNoGapTime(tradeDate: String, tradeTime?: String): Date
+export { dateFtt, formatNoGapTime }

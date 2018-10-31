@@ -1,5 +1,4 @@
 import ajaxAsync from './ajax/ajaxAsync'
-import dateFtt from './time/dateFtt'
 import ajaxAsyncChz from './ajax/ajaxAsyncChz'
 import ajaxAsyncICCard from './ajax/ajaxAsyncICCard'
 // import broswer from './broswer'
@@ -16,7 +15,8 @@ import WX from './plugins/weixin/wx'
 
 export default ajaxAsync
 
-export { ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard, dateFtt }
+export { ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard }
+export { dateFtt, formatNoGapTime } from './time/dateFtt'
 // export { broswer }
 
 export { getUrlParams, getUrlParamByKey } from './url/getUrlParams'

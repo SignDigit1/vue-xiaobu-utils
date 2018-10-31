@@ -56,7 +56,7 @@ function ajaxAsyncICCard(urlString, sendObj, autoEx = true) {
             JSON.stringify(response.data)
         )
         if (response.data.ResponseStatus.ErrorCode === 'OK') {
-          return response
+          return response.data
         } else {
           if (autoEx) {
             var toastMsg = response.data.ResponseStatus.Errors[0].Message

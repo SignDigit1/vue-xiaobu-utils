@@ -36,4 +36,32 @@ function dateFtt(fmt, date) {
   return fmt
 }
 
-export default dateFtt
+/**
+ *
+ * 格式化无间隔日期
+ * @param {String} tradeDate 例：20181031
+ * @param {String} tradeTime 例：182900
+ * @returns {Date}
+ */
+function formatNoGapTime(tradeDate, tradeTime) {
+  let date =
+    tradeDate.substring(0, 4) +
+    '/' +
+    tradeDate.substring(4, 6) +
+    '/' +
+    tradeDate.substring(6)
+
+  let time = ''
+  if (tradeTime) {
+    time =
+      tradeTime.substring(0, 2) +
+      ':' +
+      tradeTime.substring(2, 4) +
+      ':' +
+      tradeTime.substring(4)
+    return new Date(`${date} ${time}`)
+  }
+  return new Date(`${date}`)
+}
+
+export { dateFtt, formatNoGapTime }
