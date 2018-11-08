@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { startWith } from '../util'
 
-let api = 'https://bwtapi.czsmk.com:8443/city-api/v201'
+let api = window.iccardApi
 axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
 // 需要安装axios和Mint的Toast
 

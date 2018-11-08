@@ -45,7 +45,11 @@ const power = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
  */
 function isValidatedAllIdcard(idcard) {
   // TODO:常州实体卡白名单
-  if (idcard === 112233445566 || idcard === '112233445566') return true
+  if (
+    !window.prodInApp &&
+    (idcard === 112233445566 || idcard === '112233445566')
+  )
+    return true
   if (!idcard) {
     return false
   }
@@ -175,7 +179,7 @@ function validate15IDCard(idcard) {
  * @returns 合法返回TRUE，否则返回FALSE
  */
 function checkProvinceid(provinceid) {
-  for (let id in cityCode) {
+  for (let id of cityCode) {
     if (id === provinceid) {
       return true
     }

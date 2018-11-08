@@ -13,9 +13,9 @@ axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
  * 调用方式ajaxAsync(url,paramsObj).then(function(body){}).catch(function(error){});
  * @param {String} urlString 协议地址
  * @param {Object} sendObj 参数
- * @param {Boolean} autoEx 是否需要自动处理异常
+ * @param {Number} autoExLvl 自动处理异常等级,0表示都处理异常，1表示只自动处理协议网络异常，2表示不自动处理异常
  */
-function ajaxAsync(urlString, sendObj, autoEx = true) {
+function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
   let cancelToken = axios.CancelToken
   let source = cancelToken.source()
   // 页面onpause时取消发送
@@ -23,6 +23,7 @@ function ajaxAsync(urlString, sendObj, autoEx = true) {
   // if (window.pause) {
   //   source.cancel(`取消发送${urlString}`)
   // }
+  if(autoExLvl = true) autoExLvl = 0
 
   var url = urlString + ''
   var sessionID = ''
@@ -83,7 +84,7 @@ function ajaxAsync(urlString, sendObj, autoEx = true) {
         ) {
           return response.data.BODY
         } else {
-          if (autoEx) {
+          if (autoExLvl < 1) {
             var toastMsg = ''
             var logMsg = ''
             var errCode = response.data.RSPCD + ''
@@ -119,7 +120,7 @@ function ajaxAsync(urlString, sendObj, autoEx = true) {
         console.log('Request canceled', error.message)
         throw error
       }
-      if (autoEx) {
+      if (autoExLvl <= 1) {
         var toastMsg = ''
         var logMsg = ''
         var errCode = null
