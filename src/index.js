@@ -2,6 +2,7 @@ import ajaxAsync from './ajax/ajaxAsync'
 import ajaxAsyncChz from './ajax/ajaxAsyncChz'
 import ajaxAsyncICCard from './ajax/ajaxAsyncICCard'
 import nativePlugin from './plugins/nativePlugin'
+import browser from './broswer';
 
 export default ajaxAsync
 
@@ -39,3 +40,5 @@ export {
 export { isValidatedAllIdcard } from './validotor/idCardValidotor'
 
 export { nativePlugin }
+
+export { browser }

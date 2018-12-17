@@ -2,8 +2,9 @@
  * 获取编译好的url并跳转
  * @param {String} url module=city-app&page=home&_tv=true
  * @param {String} [type] 跳转方式，'pop','open';默认为open
+ * @param {Boolean} needJump 是否跳转，默认为跳转,传值为true
  */
-declare function go(url: String, type?: String): void
+declare function go(url: String, type?: String, needJump?: Boolean): void
 
 /**
  * 返回,不带数据
@@ -44,7 +45,7 @@ declare function goByUsualUrl(url: String): void
  *前往登录页面
  *@param {Boolean} backtoroot (可选)取消登录后是否跳转回首页，默认false
  */
-declare function goLogin(backtoroot: false): void
+declare function goLogin(backtoroot?: boolean): void
 
 /**
  *

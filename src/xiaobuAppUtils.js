@@ -109,7 +109,7 @@ function parseToUrl(moduleUrl) {
   // let moduleName = jsonObj.module
   let moduleName
   // 拦截bus-app
-  if (jsonObj.module === 'bus-app') moduleName = window.busPathVue
+  if (jsonObj.module === 'bus-app') moduleName = window.busPathVue ? window.busPathVue : jsonObj.module
   else moduleName = jsonObj.module
   let pageName = jsonObj.page
   let url = ''
@@ -228,8 +228,9 @@ function appendParamsBaseByQMark(url, key, value) {
  * 获取编译好的url并跳转
  * @param {String} url module=city-app&page=home&_tv=true
  * @param {String} type 跳转方式，'pop','open';默认为open
+ * @param {Boolean} needJump 是否跳转，默认为跳转,传值为true
  */
-function go(url, type) {
+function go(url, type, needJump = true) {
   if (url.indexOf('http') > -1) {
     window.location.assign(url)
   } else {
@@ -246,7 +247,8 @@ function go(url, type) {
       url = appendParamsBase(url, type)
       console.log(url)
       // if (window.prodInApp) {
-      window.location.assign(url)
+      if (needJump) window.location.assign(url)
+      else return url
       // } else {
       //   window.alert(`open=>${url}`)
       // }
@@ -350,7 +352,7 @@ function popToTop(tabUrl, select, context) {
 }
 
 function popToHome() {
-  popToTop('city-app/home.html')
+  popToTop('city-app/home.html',1)
 }
 
 /**

@@ -1,12 +1,12 @@
 export default class System {
   constructor() {
-    console.log('SystemPluginReady')
+    // console.log('SystemPluginReady')
 
-    // if (window.x_system) {
-    //   console.log('SystemPluginReady')
-    // } else {
-    //   return Object.create(null)
-    // }
+    if (window.x_system || window.wx) {
+      console.log('SystemPluginReady')
+    } else {
+      return Object.create(null)
+    }
   }
   /**
    * 获取设备信息
@@ -17,7 +17,12 @@ export default class System {
    * @memberof System
    */
   getDeviceInfo(successCallback, errorCallback) {
-    window.x_system.getDeviceInfo(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.getDeviceInfo(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无获取设备信息接口')
+      errorCallback()
+    }
   }
   /**
    * 获取系统版本号
@@ -28,7 +33,12 @@ export default class System {
    * @memberof System
    */
   getOSVersion(successCallback, errorCallback) {
-    window.x_system.getOSVersion(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.getOSVersion(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无获取系统版本号接口')
+      errorCallback()
+    }
   }
   /**
    * 获取网络接入方式.
@@ -39,7 +49,27 @@ export default class System {
    * @memberof System
    */
   getNetworkType(successCallback, errorCallback) {
-    window.x_system.getNetworkType(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.getNetworkType(successCallback, errorCallback)
+    else if (window.wx) {
+      window.wx.getNetworkType({
+        success: res => {
+          if (
+            res.networkType === '2g' ||
+            res.networkType === '3g' ||
+            res.networkType === '4g'
+          ) {
+            successCallback(1)
+          } else if (res.networkType === 'wifi') {
+            successCallback(2)
+          } else {
+            successCallback(0)
+          }
+        },
+        fail: errorCallback,
+        complete: () => {}
+      })
+    }
   }
   /**
    * 获取个推的PushCID
@@ -50,7 +80,12 @@ export default class System {
    * @memberof System
    */
   getPushCID(successCallback, errorCallback) {
-    window.x_system.getPushCID(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.getPushCID(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无获取个推的PushCID接口')
+      errorCallback()
+    }
   }
   /**
    * 清空缓存
@@ -60,7 +95,12 @@ export default class System {
    * @memberof System
    */
   cleanCache(successCallback, errorCallback) {
-    window.x_system.cleanCache(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.cleanCache(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无清空缓存接口')
+      errorCallback()
+    }
   }
   /**
    * 弹出照片选择器
@@ -74,13 +114,37 @@ export default class System {
    * @memberof System
    */
   photoPicker(maxSelec, width, height, successCallback, errorCallback) {
-    window.x_system.photoPicker(
-      successCallback,
-      errorCallback,
-      maxSelec,
-      width,
-      height
-    )
+    if (window.x_system)
+      window.x_system.photoPicker(
+        successCallback,
+        errorCallback,
+        maxSelec,
+        width,
+        height
+      )
+    else if (window.wx) {
+      /**
+       * 拍照或从手机相册中选图接口
+       *
+       * @param {Number} count 选区的图片数量，默认9
+       * @param {String[]} sizeType 可以指定是原图还是压缩图，默认二者都有,如['original', 'compressed']
+       * @param {String[]} sourceType 可以指定来源是相册还是相机，默认二者都有, 如['album', 'camera']
+       * @param {function(WXLocalFile)} successCallback 返回类型为{localIds：[]},localIds选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+       * @param {function(Object)} errorCallback 失败回调返回错误信息，包含信息如 {"errMsg":"具体错误信息"}
+       * @param {Function} completeCallback 接口调用完成时执行的回调函数，无论成功或失败都会执行
+       * @memberof WX
+       */
+      window.wx.chooseImage({
+        count: maxSelec,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success: res => {
+          successCallback(res.localIds)
+        },
+        fail: errorCallback,
+        complete: () => {}
+      })
+    }
   }
   /**
    * 弹出省份与城市选择器
@@ -92,7 +156,12 @@ export default class System {
    * @memberof System
    */
   addressPicker(selectcode, successCallback, errorCallback) {
-    window.x_system.addressPicker(successCallback, errorCallback, selectcode)
+    if (window.x_system)
+      window.x_system.addressPicker(successCallback, errorCallback, selectcode)
+    else if (window.wx) {
+      console.error('微信无弹出省份与城市选择器接口')
+      errorCallback()
+    }
   }
   /**
    * 调高屏幕亮度
@@ -102,7 +171,12 @@ export default class System {
    * @memberof System
    */
   improveBrightness(successCallback, errorCallback) {
-    window.x_system.improveBrightness(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.improveBrightness(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无调高屏幕亮度接口')
+      errorCallback()
+    }
   }
   /**
    * 恢复屏幕亮度
@@ -112,7 +186,12 @@ export default class System {
    * @memberof System
    */
   resetBrightness(successCallback, errorCallback) {
-    window.x_system.resetBrightness(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.resetBrightness(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无恢复屏幕亮度接口')
+      errorCallback()
+    }
   }
   /**
    * 自动设置屏幕亮度
@@ -123,7 +202,12 @@ export default class System {
    * @memberof System
    */
   setAutoBrightness(auto, successCallback, errorCallback) {
-    window.x_system.setAutoBrightness(successCallback, errorCallback, auto)
+    if (window.x_system)
+      window.x_system.setAutoBrightness(successCallback, errorCallback, auto)
+    else if (window.wx) {
+      console.error('微信无自动设置屏幕亮度接口')
+      errorCallback()
+    }
   }
   /**
    * 设置屏幕亮度
@@ -134,11 +218,16 @@ export default class System {
    * @memberof System
    */
   setWindowsBrightness(brightness, successCallback, errorCallback) {
-    window.x_system.setWindowsBrightness(
-      successCallback,
-      errorCallback,
-      brightness
-    )
+    if (window.x_system)
+      window.x_system.setWindowsBrightness(
+        successCallback,
+        errorCallback,
+        brightness
+      )
+    else if (window.wx) {
+      console.error('微信无设置屏幕亮度接口')
+      errorCallback()
+    }
   }
   /**
    * 获取屏幕亮度值
@@ -149,7 +238,12 @@ export default class System {
    * @memberof System
    */
   getWindowsBrightness(successCallback, errorCallback) {
-    window.x_system.getWindowsBrightness(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.getWindowsBrightness(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无获取屏幕亮度值接口')
+      errorCallback()
+    }
   }
   /**
    * 判断是否开启自动亮度
@@ -159,7 +253,12 @@ export default class System {
    * @memberof System
    */
   isAutoBrightness(successCallback, errorCallback) {
-    window.x_system.isAutoBrightness(successCallback, errorCallback)
+    if (window.x_system)
+      window.x_system.isAutoBrightness(successCallback, errorCallback)
+    else if (window.wx) {
+      console.error('微信无判断是否开启自动亮度接口')
+      errorCallback()
+    }
   }
   /**
    * 注册Push监听事件
@@ -171,12 +270,17 @@ export default class System {
    * @memberof System
    */
   registerPushListener(messageId, callback, successCallback, errorCallback) {
-    window.x_system.registerPushListener(
-      successCallback,
-      errorCallback,
-      messageId,
-      callback
-    )
+    if (window.x_system)
+      window.x_system.registerPushListener(
+        successCallback,
+        errorCallback,
+        messageId,
+        callback
+      )
+    else if (window.wx) {
+      console.error('微信无注册Push监听事件接口')
+      errorCallback()
+    }
   }
 
   /**
@@ -188,11 +292,16 @@ export default class System {
    * @memberof System
    */
   unRegisterPushListener(messageId, successCallback, errorCallback) {
-    window.x_system.unRegisterPushListener(
-      successCallback,
-      errorCallback,
-      messageId
-    )
+    if (window.x_system)
+      window.x_system.unRegisterPushListener(
+        successCallback,
+        errorCallback,
+        messageId
+      )
+    else if (window.wx) {
+      console.error('微信无取消Push监听事件接口')
+      errorCallback()
+    }
   }
 
   /**
@@ -238,19 +347,24 @@ export default class System {
       ossPath,
       files
     }
-    window.x_system.uploadFiles(
-      ops => {
-        console.log('ops:')
-        console.dir(ops)
-        let arr = []
-        for (let item of req.files) {
-          arr.push(`http://${req.bucket}.${req.endpoint}/${item.ossPath}`)
-        }
-        successCallback(arr)
-      },
-      errorCallback,
-      JSON.stringify(req)
-    )
+    if (window.x_system)
+      window.x_system.uploadFiles(
+        ops => {
+          console.log('ops:')
+          console.dir(ops)
+          let arr = []
+          for (let item of req.files) {
+            arr.push(`http://${req.bucket}.${req.endpoint}/${item.ossPath}`)
+          }
+          successCallback(arr)
+        },
+        errorCallback,
+        JSON.stringify(req)
+      )
+    else if (window.wx) {
+      console.error('微信无文件上传接口')
+      errorCallback()
+    }
   }
   /**
    * 选定视屏区域内拍照
@@ -262,12 +376,26 @@ export default class System {
    * @memberof System
    */
   takePhotoByArea(width, height, successCallback, failureCallback) {
-    window.x_system.takePhotoByArea(
-      successCallback,
-      failureCallback,
-      width,
-      height
-    )
+    if (window.x_system)
+      window.x_system.takePhotoByArea(
+        successCallback,
+        failureCallback,
+        width,
+        height
+      )
+    else if (window.wx) {
+      console.warn('微信无法控制拍照区域大小')
+      window.wx.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['camera'],
+        success: res => {
+          successCallback(res.localIds)
+        },
+        fail: failureCallback,
+        complete: () => {}
+      })
+    }
   }
   /**
    * 打开线路详情地图
@@ -284,13 +412,18 @@ export default class System {
     successCallback,
     failureCallback
   ) {
-    window.x_system.openBusLineMap(
-      successCallback,
-      failureCallback,
-      lineId,
-      direction,
-      unifiedId
-    )
-    console.log('调用')
+    if (window.x_system)
+      window.x_system.openBusLineMap(
+        successCallback,
+        failureCallback,
+        lineId,
+        direction,
+        unifiedId
+      )
+    else if (window.wx) {
+      console.error('微信无打开线路详情地图接口')
+      failureCallback()
+    }
+    // console.log('调用')
   }
 }

@@ -10,10 +10,10 @@ axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
  *
  * @param {String} url 协议地址
  * @param {Object} sendObj 参数
- * @param {boolean} [autoEx=true] (可选)是否需要自动处理异常
+ * @param {Number} autoExLvl 自动处理异常等级,0表示都处理异常，1表示只自动处理协议网络异常，2表示不自动处理异常
  * @returns
  */
-function ajaxAsyncICCard(urlString, sendObj, autoEx = true) {
+function ajaxAsyncICCard(urlString, sendObj, autoExLvl = 0) {
   sendObj.OrigDomain = 'APP'
   sendObj.Token = '0SS8JYJTQX'
 
@@ -24,6 +24,9 @@ function ajaxAsyncICCard(urlString, sendObj, autoEx = true) {
   if (window.pause) {
     source.cancel(`取消发送${urlString}`)
   }
+
+  if ((autoExLvl === true)) autoExLvl = 0
+  else if ((autoExLvl === false)) autoExLvl = 2
 
   var url = urlString + ''
   if (!startWith(url, '/')) {
@@ -58,7 +61,7 @@ function ajaxAsyncICCard(urlString, sendObj, autoEx = true) {
         if (response.data.ResponseStatus.ErrorCode === 'OK') {
           return response.data
         } else {
-          if (autoEx) {
+          if (autoExLvl < 1) {
             var toastMsg = response.data.ResponseStatus.Errors[0].Message
             var logMsg = response.data.ResponseStatus.Errors[0].Message
 
@@ -79,7 +82,7 @@ function ajaxAsyncICCard(urlString, sendObj, autoEx = true) {
         console.log('Request canceled', error.message)
         throw error
       }
-      if (autoEx) {
+      if (autoExLvl <= 1) {
         var toastMsg = ''
         var logMsg = ''
         var errCode = null

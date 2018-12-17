@@ -19,6 +19,14 @@ function compareDateHHmmss(startDate, endDate) {
   var arrEnd = endDate.split(':')
   var endTime = new Date('2018', '1', '1', arrEnd[0], arrEnd[1], arrEnd[2])
   var endTimes = endTime.getTime()
+  if ((arrStart[0] === '00' &&
+    arrStart[1] === '00' &&
+    arrStart[2] === '00') || (
+    arrEnd[0] === '00' &&
+    arrEnd[1] === '00' &&
+    arrEnd[2] === '00')) {
+    return true
+  }
   if (endTimes <= startTimes) {
     return false
   } else {

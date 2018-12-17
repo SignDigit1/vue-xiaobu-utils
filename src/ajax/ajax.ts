@@ -1,21 +1,34 @@
+/*
+ * @Description: 测试typescript以及await
+ * @Author: jun.fu
+ * @Date: 2018-12-06 18:20:13
+ * @Last Modified by: jun.fu
+ * @Last Modified time: 2018-12-06 18:30:35
+ */
 import axios from 'axios'
 import { goLogin } from '../xiaobuAppUtils'
 import { startWith } from '../util'
 
-let api = window.api
-let token = window.token
+// tslint:disable-next-line
+let api = (<any>window).api
+let token = (<any>window).token
 axios.defaults.baseURL = api
-axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
-// 需要安装axios和Mint的Toast
+axios.defaults.timeout = (<any>window).API_DELAY_TIME
+  ? (<any>window).API_DELAY_TIME
+  : 3000
 
 /**
- * 封装的协议发送工具
- * 调用方式ajaxAsync(url,paramsObj).then(function(body){}).catch(function(error){});
- * @param {String} urlString 协议地址
- * @param {Object} sendObj 参数
- * @param {Number} autoExLvl 自动处理异常等级,0表示都处理异常，1表示只自动处理协议网络异常，2表示不自动处理异常
+ *
+ *
+ * @param {string} urlString
+ * @param {object} sendObj
+ * @param {number} [autoExLvl=0]
  */
-function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
+async function ajaxAsync(
+  urlString: string,
+  sendObj: object,
+  autoExLvl: number = 0
+) {
   let cancelToken = axios.CancelToken
   let source = cancelToken.source()
   // 页面onpause时取消发送
@@ -23,19 +36,19 @@ function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
   // if (window.pause) {
   //   source.cancel(`取消发送${urlString}`)
   // }
-  if (autoExLvl === true) autoExLvl = 0
-  else if (autoExLvl === false) autoExLvl = 2
+  if (typeof autoExLvl === 'boolean' && autoExLvl) autoExLvl = 0
+  else autoExLvl = 2
 
-  var url = urlString + ''
-  var sessionID = ''
+  let url = urlString + ''
+  let sessionID = ''
   if (startWith(url, '/')) {
     // url = url
   } else {
     url = '/' + url
   }
   url = url + '?token=' + token
-  if (window.localStorage.getItem('XIAOBUSESSION')) {
-    sessionID = window.localStorage.getItem('XIAOBUSESSION').trim()
+  if ((<any>window).localStorage.getItem('XIAOBUSESSION')) {
+    sessionID = (<any>window).localStorage.getItem('XIAOBUSESSION').trim()
   }
   if (sessionID === null || sessionID === '' || sessionID === 'null') {
     sessionID = ''
@@ -58,10 +71,10 @@ function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
     )
   }
 
-  var needLogin = false
+  let needLogin = false
 
-  return axios
-    .post(url, window.sign(JSON.stringify(sendObj), token, sessionID), {
+  await axios
+    .post(url, (<any>window).sign(JSON.stringify(sendObj), token, sessionID), {
       headers: {
         'X-SESSIONID': sessionID,
         Cookie: 'JSESSIONID=' + sessionID,
@@ -69,7 +82,7 @@ function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
       },
       cancelToken: source.token // 取消事件
     })
-    .then(function(response) {
+    .then(response => {
       if (response.status === 200) {
         console.log(
           'POST请求日志=>响应成功#####请求路径=>' +
@@ -116,15 +129,15 @@ function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
         }
       }
     })
-    .catch(function(error) {
+    .catch(error => {
       if (axios.isCancel(error)) {
         console.log('Request canceled', error.message)
         throw error
       }
       if (autoExLvl <= 1) {
-        var toastMsg = ''
-        var logMsg = ''
-        var errCode = null
+        let toastMsg = ''
+        let logMsg = ''
+        let errCode = ''
 
         console.error(error)
         if (error.response !== undefined && error.response !== null) {
@@ -195,11 +208,11 @@ function loginFunction() {
   goLogin(true)
 }
 
-function toastFunction(toastMsg, errCode) {
+function toastFunction(toastMsg: string, errCode: string) {
   console.log('--------------协议toast--------------')
   console.log(toastMsg)
   let toast = true
-  if (window.pause) {
+  if ((<any>window).pause) {
     toast = false
     if (
       errCode === '401' ||
@@ -212,24 +225,12 @@ function toastFunction(toastMsg, errCode) {
   }
   if (toast) {
     if (toastMsg && toastMsg !== '') {
-      if (window.x_toast) {
-        window.x_toast.showShortBottom(toastMsg, () => {}, () => {})
+      if ((<any>window).x_toast) {
+        ;(<any>window).x_toast.showShortBottom(toastMsg, () => {}, () => {})
       } else {
       }
     }
   }
 }
-
-// function startWith(s, c) {
-//   if (c === null || c === '' || s.length === 0 || c.length > s.length) {
-//     return false
-//   }
-//   if (s.substr(0, c.length) === c) {
-//     return true
-//   } else {
-//     return false
-//   }
-//   //   return true
-// }
 
 export default ajaxAsync

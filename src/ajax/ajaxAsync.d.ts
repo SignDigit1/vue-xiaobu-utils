@@ -9,7 +9,7 @@
 declare function ajaxAsync(
   urlString: String,
   sendObj: Object,
-  autoEx?: 0 | Number
+  autoExLvl?: 0 | Number
 ): Promise<Object>
 
 export default ajaxAsync
