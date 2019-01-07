@@ -258,9 +258,16 @@ function go(url, type, needJump = true) {
   }
 }
 
-function goByUsualUrl(url) {
+function goByUsualUrl(url, needshare = false) {
   if (url.indexOf('http') > -1) {
-    window.location.assign(url)
+    if (url.indexOf('_ns') <= 0) {
+      if (url.indexOf('?') > -1) {
+        url = url + '&'
+      } else {
+        url = url + '?'
+      }
+    }
+    window.location.assign(url + '_ns=' + needshare)
   } else {
     if (url.indexOf('xbapp://open/') > -1) {
       url = url.substring(url.indexOf('xbapp://open/') + 13)
