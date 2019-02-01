@@ -30,7 +30,9 @@ export {
   // log,
   generateQueryStr,
   isAndroid,
-  startWith
+  startWith,
+  limitLength,
+  uuid
 } from './util'
 
 export { compareDateHHmmss, compareDateyyyyMMdd } from './time/compareDate'

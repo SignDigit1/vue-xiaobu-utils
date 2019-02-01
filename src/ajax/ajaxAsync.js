@@ -1,11 +1,24 @@
 import axios from 'axios'
 import { goLogin } from '../xiaobuAppUtils'
-import { startWith } from '../util'
+import { uuid } from '../util'
+import { Toast as MToast } from 'mint-ui'
+import 'mint-ui/lib/toast/style.css'
 
 let api = window.api
 let token = window.token
 axios.defaults.baseURL = api
 axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
+let LOGINFROMPAGEKEY = 'LOGINFROMPAGEjnksfj'
+
+;(function() {
+  window[LOGINFROMPAGEKEY] = undefined
+  window.loginFromPageEvent = window.document.addEventListener('resume', () => {
+    window[LOGINFROMPAGEKEY] = undefined
+  })
+  if (!window.ajaxMap) {
+    window.ajaxMap = {}
+  }
+})()
 // 需要安装axios和Mint的Toast
 
 /**
@@ -15,184 +28,188 @@ axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
  * @param {Object} sendObj 参数
  * @param {Number} autoExLvl 自动处理异常等级,0表示都处理异常，1表示只自动处理协议网络异常，2表示不自动处理异常
  */
-function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
+async function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
+  // 协议取消方法创建
   let cancelToken = axios.CancelToken
   let source = cancelToken.source()
+
+  // 存储即将发送的协议
+  let ajaxMapValue = {
+    data: {
+      url: urlString,
+      params: sendObj
+    },
+    source: source
+  }
+  let ajaxMapKey = uuid()
+  for (let key in window.ajaxMap) {
+    if (
+      JSON.stringify(ajaxMapValue.data) ===
+      JSON.stringify(window.ajaxMap[key].data)
+    ) {
+      throw {
+        data: { RSPCD: 'XB400005', RSPMSG: '协议已发送' }
+      }
+    }
+  }
+  window.ajaxMap[ajaxMapKey] = ajaxMapValue
+
   // 页面onpause时取消发送
   // TODO:暂时关闭，等待安卓修改地图页面的纠错无法接受到onresumebug
   // if (window.pause) {
   //   source.cancel(`取消发送${urlString}`)
   // }
+  // 请求处理等级，布尔值转换
   if (autoExLvl === true) autoExLvl = 0
   else if (autoExLvl === false) autoExLvl = 2
-
-  var url = urlString + ''
-  var sessionID = ''
-  if (startWith(url, '/')) {
-    // url = url
-  } else {
-    url = '/' + url
-  }
-  url = url + '?token=' + token
+  let url =
+    (urlString.startsWith('/') ? urlString : urlString + '/') +
+    '?token=' +
+    token
+  let sessionID = ''
   if (window.localStorage.getItem('XIAOBUSESSION')) {
     sessionID = window.localStorage.getItem('XIAOBUSESSION').trim()
   }
-  if (sessionID === null || sessionID === '' || sessionID === 'null') {
-    sessionID = ''
-    console.log(
-      'POST请求日志=>准备发送#####请求路径=>' +
-        api +
-        url +
-        '#####报文=>' +
-        JSON.stringify(sendObj)
-    )
-  } else {
-    console.log(
-      'POST请求日志=>准备发送#####SESSIONID:' +
-        sessionID +
-        '=>#####请求路径=>' +
-        api +
-        url +
-        '#####报文=>' +
-        JSON.stringify(sendObj)
-    )
-  }
+  console.log(
+    'POST请求日志=>准备发送#####SESSIONID:' +
+      sessionID +
+      '=>#####请求路径=>' +
+      api +
+      url +
+      '#####报文=>' +
+      JSON.stringify(sendObj)
+  )
 
-  var needLogin = false
+  try {
+    let res = await axios.post(
+      url,
+      window.sign(JSON.stringify(sendObj), token, sessionID),
+      {
+        headers: {
+          'X-SESSIONID': sessionID,
+          Cookie: 'JSESSIONID=' + sessionID,
+          'Content-Type': 'application/JSON;charset=UTF-8'
+        },
+        cancelToken: source.token // 取消事件
+      }
+    )
+    if (res.status === 200) {
+      console.log(
+        'POST请求日志=>响应成功#####请求路径=>' +
+          api +
+          url +
+          '#####报文=>' +
+          JSON.stringify(res.data)
+      )
+      if (res.data.RSPCD === '000000') {
+        return res.data.BODY
+      } else {
+        throw res
+      }
+    }
+  } catch (error) {
+    let needLogin = false
+    let errCode = null
+    let errMsg = null
+    let toastMsg = ''
+    let logMsg = ''
+    if (error.status && errror.status === 200) {
+      if (autoExLvl < 1) {
+        errCode = error.data.RSPCD + ''
+        errMsg = error.data.RSPMSG
+      }
+    } else if (error.response && error.response.status) {
+      if (autoExLvl <= 1) {
+        errCode = error.response.status + ''
+      }
+    }
 
-  return axios
-    .post(url, window.sign(JSON.stringify(sendObj), token, sessionID), {
-      headers: {
-        'X-SESSIONID': sessionID,
-        Cookie: 'JSESSIONID=' + sessionID,
-        'Content-Type': 'application/JSON;charset=UTF-8'
-      },
-      cancelToken: source.token // 取消事件
-    })
-    .then(function(response) {
-      if (response.status === 200) {
-        console.log(
-          'POST请求日志=>响应成功#####请求路径=>' +
+    if (errCode) {
+      switch (errCode) {
+        case '400004':
+          logMsg = 'SESSION INVALID'
+          needLogin = true
+          break
+        case '400011' || '400003':
+          logMsg = '内部错误或RPC Call Failure!!!'
+          toastMsg = '服务器开小差了,程序员哥哥正在紧急修复'
+          break
+        case '-1':
+          toastMsg = '网络好像开小差咯'
+          logMsg =
+            'POST请求日志=>请求处理失败!!!,请求路径=>' +
             api +
             url +
-            '#####报文=>' +
-            JSON.stringify(response.data)
-        )
-        // 协议处理成功
-        if (
-          response.data.RSPCD === '000000' &&
-          response.data.RSPMSG === 'succeed'
-        ) {
-          return response.data.BODY
-        } else {
-          if (autoExLvl < 1) {
-            var toastMsg = ''
-            var logMsg = ''
-            var errCode = response.data.RSPCD + ''
-            if (errCode === '400004') {
-              logMsg = 'SESSION INVALID'
-              needLogin = true
-            } else if (errCode === '400011' || errCode === '400003') {
-              logMsg = '内部错误或RPC Call Failure!!!'
-              toastMsg = '服务器开小差了,程序员哥哥正在紧急修复'
-            } else {
-              logMsg = response.data.RSPMSG
-              toastMsg = response.data.RSPMSG
-            }
-
-            if (toastMsg.length > 0) {
-              toastFunction(toastMsg, errCode)
-            }
-            if (logMsg.length > 0) {
-              console.error(logMsg)
-            }
-            if (needLogin) {
-              // 需要登录处理
-              needLogin = false
-              loginFunction()
-            }
+            '$$$$$错误码=>-1$$$$$错误描述=>TIME_OUT'
+          break
+        case '403':
+          // toastMsg = '网络请求失败,请重试'
+          logMsg =
+            'POST请求日志=>请求处理失败!!!,请求路径=>' +
+            api +
+            url +
+            '$$$$$错误码=>403$$$$$错误描述=>FORBIDDEN'
+          needLogin = true
+          break
+        case '401':
+          toastMsg = '网络请求失败,请重试'
+          logMsg =
+            'POST请求日志=>请求处理失败!!!,请求路径=>' +
+            api +
+            url +
+            '$$$$$错误码=>401$$$$$错误描述=>AUTH FORBIDDEN'
+          break
+        default:
+          if (errMsg) {
+            logMsg = errMsg
+            toastMsg = errMsg
+          } else if (error.response && error.response.status) {
+            toastMsg = '网络好像开小差咯'
+            logMsg =
+              'POST请求日志=>请求处理失败!!!,请求路径=>' +
+              api +
+              url +
+              '$$$$$错误码=>' +
+              error.response.status +
+              '$$$$$错误描述=>未知错误'
           }
-          throw response
-        }
+          break
       }
-    })
-    .catch(function(error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled', error.message)
-        throw error
-      }
-      if (autoExLvl <= 1) {
-        var toastMsg = ''
-        var logMsg = ''
-        var errCode = null
+    } else if (
+      autoExLvl <= 1 &&
+      error &&
+      (error.message === 'Network Error' || error.code === 'ECONNABORTED')
+    ) {
+      toastMsg = '网络好像开小差咯'
+    }
+    if (toastMsg.length > 0) {
+      toastFunction(toastMsg, errCode)
+    }
+    if (logMsg.length > 0) {
+      console.error(logMsg)
+    }
+    if (needLogin) {
+      // 需要登录处理
+      needLogin = false
+      loginFunction()
+    }
 
-        console.error(error)
-        if (error.response !== undefined && error.response !== null) {
-          errCode = error.response.status + ''
-          switch (errCode) {
-            case '-1':
-              toastMsg = '网络好像开小差咯'
-              logMsg =
-                'POST请求日志=>请求处理失败!!!,请求路径=>' +
-                api +
-                url +
-                '$$$$$错误码=>-1$$$$$错误描述=>TIME_OUT'
-              break
-            case '403':
-              // toastMsg = '网络请求失败,请重试'
-              logMsg =
-                'POST请求日志=>请求处理失败!!!,请求路径=>' +
-                api +
-                url +
-                '$$$$$错误码=>403$$$$$错误描述=>FORBIDDEN'
-              needLogin = true
-              break
-            case '401':
-              toastMsg = '网络请求失败,请重试'
-              logMsg =
-                'POST请求日志=>请求处理失败!!!,请求路径=>' +
-                api +
-                url +
-                '$$$$$错误码=>401$$$$$错误描述=>AUTH FORBIDDEN'
-              break
-            default:
-              toastMsg = '网络好像开小差咯'
-              logMsg =
-                'POST请求日志=>请求处理失败!!!,请求路径=>' +
-                api +
-                url +
-                '$$$$$错误码=>' +
-                error.response.status +
-                '$$$$$错误描述=>未知错误'
-          }
-        } else if (
-          error &&
-          (error.message === 'Network Error' || error.code === 'ECONNABORTED')
-        ) {
-          toastMsg = '网络好像开小差咯'
-        }
-        if (toastMsg.length > 0) {
-          toastFunction(toastMsg, errCode)
-        }
-        if (logMsg.length > 0) {
-          console.error(logMsg)
-        }
-        if (needLogin) {
-          // 需要登录处理
-          needLogin = false
-          loginFunction()
-        }
-      }
-
-      throw error
-    })
+    throw error
+  } finally {
+    // 应该会执行吧。。。。
+    removeThisAjax(ajaxMapKey)
+  }
 }
 
 // 登录函数
 function loginFunction() {
   // toastFunction(toastMsg)
   console.error('请登录')
-  goLogin(true)
+  if (window.location.href !== window[LOGINFROMPAGEKEY]) {
+    window[LOGINFROMPAGEKEY] = window.location.href
+    // if (!window.pause)
+    goLogin(true)
+  }
 }
 
 function toastFunction(toastMsg, errCode) {
@@ -215,21 +232,19 @@ function toastFunction(toastMsg, errCode) {
       if (window.x_toast) {
         window.x_toast.showShortBottom(toastMsg, () => {}, () => {})
       } else {
+        // 在线页面可以直接调用mui的toast
+        MToast({
+          message: toastMsg,
+          position: 'bottom',
+          duration: 3000
+        })
       }
     }
   }
 }
 
-// function startWith(s, c) {
-//   if (c === null || c === '' || s.length === 0 || c.length > s.length) {
-//     return false
-//   }
-//   if (s.substr(0, c.length) === c) {
-//     return true
-//   } else {
-//     return false
-//   }
-//   //   return true
-// }
+function removeThisAjax(key) {
+  delete window.ajaxMap[key]
+}
 
 export default ajaxAsync

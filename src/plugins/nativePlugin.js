@@ -24,6 +24,8 @@ function getDeviceReady(isCordova) {
       document.addEventListener(
         'deviceready',
         function() {
+          window.resume = true
+          window.pause = false
           console.log('deviceready')
           // 添加事件回调
           document.addEventListener(

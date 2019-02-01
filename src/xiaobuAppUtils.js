@@ -109,8 +109,10 @@ function parseToUrl(moduleUrl) {
   // let moduleName = jsonObj.module
   let moduleName
   // 拦截bus-app
-  if (jsonObj.module === 'bus-app') moduleName = window.busPathVue ? window.busPathVue : jsonObj.module
-  else moduleName = jsonObj.module
+  // if (jsonObj.module === 'bus-app')
+  //   moduleName = window.busPathVue ? window.busPathVue : jsonObj.module
+  // else
+  moduleName = jsonObj.module
   let pageName = jsonObj.page
   let url = ''
   // 开发模式不添加module
@@ -359,7 +361,7 @@ function popToTop(tabUrl, select, context) {
 }
 
 function popToHome() {
-  popToTop('city-app/home.html',1)
+  popToTop('city-app/home.html', 1)
 }
 
 /**
@@ -414,6 +416,7 @@ function jumpUrlByTel(needLogin, url) {
     window.location.assign(`${url}${getUserInfo().PHONE}`)
   }
 }
+
 export {
   go,
   gobackNoParams,

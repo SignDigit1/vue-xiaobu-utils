@@ -152,6 +152,81 @@ function startWith(s, c) {
   //   return true
 }
 
+/**
+ * 限定字符串长度
+ * @param {String} str 原字符串
+ * @param {Number} length 需要限制的长度
+ * @param {Boolean} needEllipsis 是否需要添加省略号
+ */
+function limitLength(str, length, needEllipsis = true) {
+  if (str)
+    if (str.length > length) {
+      return str.substring(0, length) + (needEllipsis ? '...' : '')
+    }
+
+  return str
+}
+
+/**
+ * 限定字符串长度，根据中英文区分，中文2个字符
+ * @param {String} str 原字符串
+ * @param {Number} length 需要限制的长度
+ * @param {Boolean} needEllipsis 是否需要添加省略号
+ */
+function limitLengthByByte(str, len, needEllipsis = true) {
+  var strLength = 0
+  var strLen = 0
+  var strCut = ''
+  strLen = str.length
+  for (var i = 0; i < strLen; i++) {
+    let a = str.charAt(i)
+    strLength++
+    if (escape(a).length > 4) {
+      // 中文字符的长度经编码之后大于4
+      strLength++
+    }
+    strCut = strCut.concat(a)
+    if (strLength >= len) {
+      strCut = needEllipsis ? strCut.concat('...') : strCut
+      return strCut
+    }
+  }
+  // 如果给定字符串小于指定长度，则返回源字符串；
+  if (strLength < len) {
+    return str
+  }
+}
+
+/**
+ *
+ * 获取uuid
+ * @param {Number} len 长度
+ * @param {Number} radix 基数
+ * @returns {String}
+ */
+function uuid(len = undefined, radix = undefined) {
+  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(
+    ''
+  )
+  var uuid = [],
+    i
+  radix = radix || chars.length
+  if (len) {
+    for (i = 0; i < len; i++) uuid[i] = chars[0 | (Math.random() * radix)]
+  } else {
+    var r
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
+    uuid[14] = '4'
+    for (i = 0; i < 36; i++) {
+      if (!uuid[i]) {
+        r = 0 | (Math.random() * 16)
+        uuid[i] = chars[i == 19 ? (r & 0x3) | 0x8 : r]
+      }
+    }
+  }
+  return uuid.join('')
+}
+
 export {
   // getUrlParamArr,
   replaceParentheses,
@@ -161,5 +236,8 @@ export {
   // log,
   generateQueryStr,
   isAndroid,
-  startWith
+  startWith,
+  limitLength,
+  limitLengthByByte,
+  uuid
 }

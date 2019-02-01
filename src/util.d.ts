@@ -69,6 +69,46 @@ declare function isAndroid(): Boolean
  */
 declare function startWith(s: String, c: String): Boolean
 
+/**
+ *
+ * 限定字符串长度
+ * @param {String} str 原字符串
+ * @param {Number} length 需要限制的长度
+ * @param {(true | Boolean)} [needEllipsis] 是否需要添加省略号'...'
+ * @returns {String} 返回的字符串
+ */
+declare function limitLength(
+  str: String,
+  length: Number,
+  needEllipsis?: true | Boolean
+): String
+
+/**
+ *
+ * 限定字符串长度，根据中英文区分，中文2个字符
+ * @param {String} str 原字符串
+ * @param {Number} length 需要限制的长度
+ * @param {(true | Boolean)} [needEllipsis] 是否需要添加省略号'...'
+ * @returns {String} 返回的字符串
+ */
+declare function limitLengthByByte(
+  str: String,
+  length: Number,
+  needEllipsis?: true | Boolean
+): String
+
+/**
+ *
+ * 获取uuid
+ * @param {(Number | undefined)} len 长度
+ * @param {(Number | undefined)} radix 基数
+ * @returns {String}
+ */
+declare function uuid(
+  len: Number | undefined,
+  radix: Number | undefined
+): String
+
 export {
   // getUrlParamArr,
   replaceParentheses,
@@ -78,5 +118,8 @@ export {
   // log,
   generateQueryStr,
   isAndroid,
-  startWith
+  startWith,
+  limitLength,
+  limitLengthByByte,
+  uuid
 }

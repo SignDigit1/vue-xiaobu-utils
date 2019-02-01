@@ -2,7 +2,7 @@ import ajaxAsync from './ajax/ajaxAsync'
 import ajaxAsyncChz from './ajax/ajaxAsyncChz'
 import ajaxAsyncICCard from './ajax/ajaxAsyncICCard'
 import nativePlugin from './plugins/nativePlugin'
-import browser from './broswer';
+import browser from './broswer'
 
 export default ajaxAsync
 
@@ -20,7 +20,10 @@ export {
   // log,
   generateQueryStr,
   isAndroid,
-  startWith
+  startWith,
+  limitLength,
+  limitLengthByByte,
+  uuid
 } from './util'
 
 export { compareDateHHmmss, compareDateyyyyMMdd } from './time/compareDate'
