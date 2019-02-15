@@ -17,30 +17,30 @@
 //     return []
 //   }
 // }
-/**
- * 替换括号
- *
- * @param {string} originStr 源字符串
- * @returns {string} 替换后字符串
- */
-function replaceParentheses(originStr) {
-  if (!originStr || originStr === '') {
-    return originStr
-  }
-  return originStr.replace(/︵/g, '（').replace(/︶/g, '）')
-}
-/**
- * 生成替换括号后的字符串
- *
- * @param {string} originStr 源字符串
- * @returns {string}
- */
-function generateParentheses(originStr) {
-  if (!originStr || originStr === '') {
-    return originStr
-  }
-  return originStr.replace(/（/g, '︵').replace(/）/g, '︶')
-}
+// /**
+//  * 替换括号
+//  *
+//  * @param {string} originStr 源字符串
+//  * @returns {string} 替换后字符串
+//  */
+// function replaceParentheses(originStr) {
+//   if (!originStr || originStr === '') {
+//     return originStr
+//   }
+//   return originStr.replace(/︵/g, '（').replace(/︶/g, '）')
+// }
+// /**
+//  * 生成替换括号后的字符串
+//  *
+//  * @param {string} originStr 源字符串
+//  * @returns {string}
+//  */
+// function generateParentheses(originStr) {
+//   if (!originStr || originStr === '') {
+//     return originStr
+//   }
+//   return originStr.replace(/（/g, '︵').replace(/）/g, '︶')
+// }
 /**
  * 无重复的存储/替换信息到localstorage中
  *
@@ -103,29 +103,29 @@ function setTitle(title) {
   window.document.body.appendChild(iframe)
 }
 
-/**
- *
- * console.log方法，生产模式下不打印
- * @param {String} string 日志内容
- */
-// function log(string) {
-//   if (!window.isProd) console.log(string)
-// }
+// /**
+//  *
+//  * console.log方法，生产模式下不打印
+//  * @param {String} string 日志内容
+//  */
+// // function log(string) {
+// //   if (!window.isProd) console.log(string)
+// // }
 
-/**
- * 生成查询字符串
- *
- * @export
- * @param {Object} queryObj 查询参数对象
- * @returns {String} 查询字符串
- */
-function generateQueryStr(queryObj) {
-  let startStr = ''
-  for (let [key, value] of Object.entries(queryObj)) {
-    startStr += `${key}=${value}&`
-  }
-  return startStr.slice(0, startStr.length - 1)
-}
+// /**
+//  * 生成查询字符串
+//  *
+//  * @export
+//  * @param {Object} queryObj 查询参数对象
+//  * @returns {String} 查询字符串
+//  */
+// function generateQueryStr(queryObj) {
+//   let startStr = ''
+//   for (let [key, value] of Object.entries(queryObj)) {
+//     startStr += `${key}=${value}&`
+//   }
+//   return startStr.slice(0, startStr.length - 1)
+// }
 // 判断手机平台
 function isAndroid() {
   var u = window.navigator.userAgent
@@ -133,111 +133,111 @@ function isAndroid() {
   return isAndroid
 }
 
-/**
- *
- * 字符串是否已目标字符开始
- * @param {String} s 原字符串
- * @param {String} c 需包含的字符
- * @returns {Boolean}
- */
-function startWith(s, c) {
-  if (c === null || c === '' || s.length === 0 || c.length > s.length) {
-    return false
-  }
-  if (s.substr(0, c.length) === c) {
-    return true
-  } else {
-    return false
-  }
-  //   return true
-}
+// /**
+//  *
+//  * 字符串是否已目标字符开始
+//  * @param {String} s 原字符串
+//  * @param {String} c 需包含的字符
+//  * @returns {Boolean}
+//  */
+// function startWith(s, c) {
+//   if (c === null || c === '' || s.length === 0 || c.length > s.length) {
+//     return false
+//   }
+//   if (s.substr(0, c.length) === c) {
+//     return true
+//   } else {
+//     return false
+//   }
+//   //   return true
+// }
 
-/**
- * 限定字符串长度
- * @param {String} str 原字符串
- * @param {Number} length 需要限制的长度
- * @param {Boolean} needEllipsis 是否需要添加省略号
- */
-function limitLength(str, length, needEllipsis = true) {
-  if (str)
-    if (str.length > length) {
-      return str.substring(0, length) + (needEllipsis ? '...' : '')
-    }
+// /**
+//  * 限定字符串长度
+//  * @param {String} str 原字符串
+//  * @param {Number} length 需要限制的长度
+//  * @param {Boolean} needEllipsis 是否需要添加省略号
+//  */
+// function limitLength(str, length, needEllipsis = true) {
+//   if (str)
+//     if (str.length > length) {
+//       return str.substring(0, length) + (needEllipsis ? '...' : '')
+//     }
 
-  return str
-}
+//   return str
+// }
 
-/**
- * 限定字符串长度，根据中英文区分，中文2个字符
- * @param {String} str 原字符串
- * @param {Number} length 需要限制的长度
- * @param {Boolean} needEllipsis 是否需要添加省略号
- */
-function limitLengthByByte(str, len, needEllipsis = true) {
-  var strLength = 0
-  var strLen = 0
-  var strCut = ''
-  strLen = str.length
-  for (var i = 0; i < strLen; i++) {
-    let a = str.charAt(i)
-    strLength++
-    if (escape(a).length > 4) {
-      // 中文字符的长度经编码之后大于4
-      strLength++
-    }
-    strCut = strCut.concat(a)
-    if (strLength >= len) {
-      strCut = needEllipsis ? strCut.concat('...') : strCut
-      return strCut
-    }
-  }
-  // 如果给定字符串小于指定长度，则返回源字符串；
-  if (strLength < len) {
-    return str
-  }
-}
+// /**
+//  * 限定字符串长度，根据中英文区分，中文2个字符
+//  * @param {String} str 原字符串
+//  * @param {Number} length 需要限制的长度
+//  * @param {Boolean} needEllipsis 是否需要添加省略号
+//  */
+// function limitLengthByByte(str, len, needEllipsis = true) {
+//   var strLength = 0
+//   var strLen = 0
+//   var strCut = ''
+//   strLen = str.length
+//   for (var i = 0; i < strLen; i++) {
+//     let a = str.charAt(i)
+//     strLength++
+//     if (escape(a).length > 4) {
+//       // 中文字符的长度经编码之后大于4
+//       strLength++
+//     }
+//     strCut = strCut.concat(a)
+//     if (strLength >= len) {
+//       strCut = needEllipsis ? strCut.concat('...') : strCut
+//       return strCut
+//     }
+//   }
+//   // 如果给定字符串小于指定长度，则返回源字符串；
+//   if (strLength < len) {
+//     return str
+//   }
+// }
 
-/**
- *
- * 获取uuid
- * @param {Number} len 长度
- * @param {Number} radix 基数
- * @returns {String}
- */
-function uuid(len = undefined, radix = undefined) {
-  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(
-    ''
-  )
-  var uuid = [],
-    i
-  radix = radix || chars.length
-  if (len) {
-    for (i = 0; i < len; i++) uuid[i] = chars[0 | (Math.random() * radix)]
-  } else {
-    var r
-    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
-    uuid[14] = '4'
-    for (i = 0; i < 36; i++) {
-      if (!uuid[i]) {
-        r = 0 | (Math.random() * 16)
-        uuid[i] = chars[i == 19 ? (r & 0x3) | 0x8 : r]
-      }
-    }
-  }
-  return uuid.join('')
-}
+// /**
+//  *
+//  * 获取uuid
+//  * @param {Number} len 长度
+//  * @param {Number} radix 基数
+//  * @returns {String}
+//  */
+// function uuid(len = undefined, radix = undefined) {
+//   var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(
+//     ''
+//   )
+//   var uuid = [],
+//     i
+//   radix = radix || chars.length
+//   if (len) {
+//     for (i = 0; i < len; i++) uuid[i] = chars[0 | (Math.random() * radix)]
+//   } else {
+//     var r
+//     uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
+//     uuid[14] = '4'
+//     for (i = 0; i < 36; i++) {
+//       if (!uuid[i]) {
+//         r = 0 | (Math.random() * 16)
+//         uuid[i] = chars[i == 19 ? (r & 0x3) | 0x8 : r]
+//       }
+//     }
+//   }
+//   return uuid.join('')
+// }
 
 export {
   // getUrlParamArr,
-  replaceParentheses,
+  // replaceParentheses,
   storeNewToOldNoRepetition,
   setTitle,
-  generateParentheses,
+  // generateParentheses,
   // log,
-  generateQueryStr,
-  isAndroid,
-  startWith,
-  limitLength,
-  limitLengthByByte,
-  uuid
+  // generateQueryStr,
+  isAndroid
+  // startWith,
+  // limitLength,
+  // limitLengthByByte,
+  // uuid
 }

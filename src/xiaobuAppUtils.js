@@ -1,5 +1,5 @@
 // import { getUrlParamArr } from './util'
-import { startWith } from './util'
+import { startWith } from 'js-xiaobu-utils'
 import { getUrlParamByKey } from './url/getUrlParams'
 
 /**

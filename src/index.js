@@ -7,26 +7,30 @@ import browser from './broswer'
 export default ajaxAsync
 
 export { ajaxAsync, ajaxAsyncChz, ajaxAsyncICCard }
-export { dateFtt, formatNoGapTime } from './time/dateFtt'
+export { dateFtt, formatNoGapTime } from 'js-xiaobu-utils'
 
 export { getUrlParams, getUrlParamByKey } from './url/getUrlParams'
 
 export {
   // getUrlParamArr,
-  replaceParentheses,
   storeNewToOldNoRepetition,
   setTitle,
+  // log,
+  isAndroid
+} from './util'
+
+export {
+  replaceParentheses,
   generateParentheses,
   // log,
   generateQueryStr,
-  isAndroid,
   startWith,
   limitLength,
   limitLengthByByte,
   uuid
-} from './util'
+} from 'js-xiaobu-utils'
 
-export { compareDateHHmmss, compareDateyyyyMMdd } from './time/compareDate'
+export { compareDateHHmmss, compareDateyyyyMMdd } from 'js-xiaobu-utils'
 
 export {
   go,

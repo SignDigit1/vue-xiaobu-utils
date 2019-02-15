@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { startWith } from '../util'
+import { startWith } from 'js-xiaobu-utils'
 
 let api = window.iccardApi
 axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
@@ -25,8 +25,8 @@ function ajaxAsyncICCard(urlString, sendObj, autoExLvl = 0) {
     source.cancel(`取消发送${urlString}`)
   }
 
-  if ((autoExLvl === true)) autoExLvl = 0
-  else if ((autoExLvl === false)) autoExLvl = 2
+  if (autoExLvl === true) autoExLvl = 0
+  else if (autoExLvl === false) autoExLvl = 2
 
   var url = urlString + ''
   if (!startWith(url, '/')) {

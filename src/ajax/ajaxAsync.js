@@ -1,18 +1,20 @@
-import axios from 'axios'
 import { goLogin } from '../xiaobuAppUtils'
-import { uuid } from '../util'
+import { uuid } from 'js-xiaobu-utils'
 import { Toast as MToast } from 'mint-ui'
 import 'mint-ui/lib/toast/style.css'
+import { ajax } from 'js-xiaobu-utils'
+import axios from 'axios'
 
 let api = window.api
 let token = window.token
-axios.defaults.baseURL = api
-axios.defaults.timeout = window.API_DELAY_TIME ? window.API_DELAY_TIME : 3000
+// axios.defaults.baseURL = api
+let timeout = window.API_DELAY_TIME
 let LOGINFROMPAGEKEY = 'LOGINFROMPAGEjnksfj'
 
 ;(function() {
   window[LOGINFROMPAGEKEY] = undefined
   window.loginFromPageEvent = window.document.addEventListener('resume', () => {
+    // 删除当前页面已去登录信息
     window[LOGINFROMPAGEKEY] = undefined
   })
   if (!window.ajaxMap) {
@@ -43,6 +45,7 @@ async function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
   }
   let ajaxMapKey = uuid()
   for (let key in window.ajaxMap) {
+    // 根据url以及参数进行判断是否一致
     if (
       JSON.stringify(ajaxMapValue.data) ===
       JSON.stringify(window.ajaxMap[key].data)
@@ -52,6 +55,7 @@ async function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
       }
     }
   }
+  // 存储当前发送的协议
   window.ajaxMap[ajaxMapKey] = ajaxMapValue
 
   // 页面onpause时取消发送
@@ -70,133 +74,27 @@ async function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
   if (window.localStorage.getItem('XIAOBUSESSION')) {
     sessionID = window.localStorage.getItem('XIAOBUSESSION').trim()
   }
-  console.log(
-    'POST请求日志=>准备发送#####SESSIONID:' +
-      sessionID +
-      '=>#####请求路径=>' +
-      api +
-      url +
-      '#####报文=>' +
-      JSON.stringify(sendObj)
-  )
-
   try {
-    let res = await axios.post(
+    return await ajax(
+      api,
+      timeout,
       url,
       window.sign(JSON.stringify(sendObj), token, sessionID),
-      {
-        headers: {
-          'X-SESSIONID': sessionID,
-          Cookie: 'JSESSIONID=' + sessionID,
-          'Content-Type': 'application/JSON;charset=UTF-8'
-        },
-        cancelToken: source.token // 取消事件
-      }
+      sessionID,
+      autoExLvl,
+      source,
+      toastFunction,
+      loginFunction
     )
-    if (res.status === 200) {
-      console.log(
-        'POST请求日志=>响应成功#####请求路径=>' +
-          api +
-          url +
-          '#####报文=>' +
-          JSON.stringify(res.data)
-      )
-      if (res.data.RSPCD === '000000') {
-        return res.data.BODY
-      } else {
-        throw res
-      }
-    }
   } catch (error) {
-    let needLogin = false
-    let errCode = null
-    let errMsg = null
-    let toastMsg = ''
-    let logMsg = ''
-    if (error.status && errror.status === 200) {
-      if (autoExLvl < 1) {
-        errCode = error.data.RSPCD + ''
-        errMsg = error.data.RSPMSG
-      }
-    } else if (error.response && error.response.status) {
-      if (autoExLvl <= 1) {
-        errCode = error.response.status + ''
-      }
-    }
-
-    if (errCode) {
-      switch (errCode) {
-        case '400004':
-          logMsg = 'SESSION INVALID'
-          needLogin = true
-          break
-        case '400011' || '400003':
-          logMsg = '内部错误或RPC Call Failure!!!'
-          toastMsg = '服务器开小差了,程序员哥哥正在紧急修复'
-          break
-        case '-1':
-          toastMsg = '网络好像开小差咯'
-          logMsg =
-            'POST请求日志=>请求处理失败!!!,请求路径=>' +
-            api +
-            url +
-            '$$$$$错误码=>-1$$$$$错误描述=>TIME_OUT'
-          break
-        case '403':
-          // toastMsg = '网络请求失败,请重试'
-          logMsg =
-            'POST请求日志=>请求处理失败!!!,请求路径=>' +
-            api +
-            url +
-            '$$$$$错误码=>403$$$$$错误描述=>FORBIDDEN'
-          needLogin = true
-          break
-        case '401':
-          toastMsg = '网络请求失败,请重试'
-          logMsg =
-            'POST请求日志=>请求处理失败!!!,请求路径=>' +
-            api +
-            url +
-            '$$$$$错误码=>401$$$$$错误描述=>AUTH FORBIDDEN'
-          break
-        default:
-          if (errMsg) {
-            logMsg = errMsg
-            toastMsg = errMsg
-          } else if (error.response && error.response.status) {
-            toastMsg = '网络好像开小差咯'
-            logMsg =
-              'POST请求日志=>请求处理失败!!!,请求路径=>' +
-              api +
-              url +
-              '$$$$$错误码=>' +
-              error.response.status +
-              '$$$$$错误描述=>未知错误'
-          }
-          break
-      }
-    } else if (
-      autoExLvl <= 1 &&
-      error &&
-      (error.message === 'Network Error' || error.code === 'ECONNABORTED')
-    ) {
-      toastMsg = '网络好像开小差咯'
-    }
-    if (toastMsg.length > 0) {
-      toastFunction(toastMsg, errCode)
-    }
-    if (logMsg.length > 0) {
-      console.error(logMsg)
-    }
-    if (needLogin) {
-      // 需要登录处理
-      needLogin = false
+    if (error.needLogin) {
       loginFunction()
     }
-
-    throw error
+    if (error.toastMsg) {
+      toastFunction(error.toastMsg, error.errCode)
+    }
+    throw error.error
   } finally {
-    // 应该会执行吧。。。。
     removeThisAjax(ajaxMapKey)
   }
 }
@@ -205,7 +103,9 @@ async function ajaxAsync(urlString, sendObj, autoExLvl = 0) {
 function loginFunction() {
   // toastFunction(toastMsg)
   console.error('请登录')
+  // 验证当前页面是否已经跳转登录
   if (window.location.href !== window[LOGINFROMPAGEKEY]) {
+    // 没有跳转登录，则存储当前页面url，并且登录
     window[LOGINFROMPAGEKEY] = window.location.href
     // if (!window.pause)
     goLogin(true)
@@ -243,8 +143,14 @@ function toastFunction(toastMsg, errCode) {
   }
 }
 
+/**
+ * 根据key删除数组中存储的协议
+ * @param {String} key 存于数据的协议的key
+ */
 function removeThisAjax(key) {
+  console.log(window.ajaxMap)
   delete window.ajaxMap[key]
+  console.log(window.ajaxMap)
 }
 
 export default ajaxAsync

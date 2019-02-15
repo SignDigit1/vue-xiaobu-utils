@@ -1,9 +1,9 @@
 {
   "name": "vue-xiaobu-utils",
   "description": "小步科技工具js",
-  "version": "1.5.11",
+  "version": "1.5.24",
   "author": "SignDigit1 <37820612+SignDigit1@users.noreply.github.com>",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "types": "src/index.d.ts",
   "license": "MIT",
   "private": false,
@@ -12,10 +12,13 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "files": [
-    "src/*"
+    "src/*",
+    "dist/*"
   ],
   "dependencies": {
     "axios": "^0.18.0",
+    "js-xiaobu-utils": "^0.0.2",
+    "mint-ui": "^2.2.13",
     "vue": "^2.5.17"
   },
   "browserslist": [
