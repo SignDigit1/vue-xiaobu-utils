@@ -1,13 +1,14 @@
 var path = require('path')
 var webpack = require('webpack')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'index.js',
-    library: 'Index',
+    filename: 'vue-xiaobu-utils.js',
+    library: 'vue-xiaobu-utils',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
@@ -73,6 +74,12 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: __dirname + '/src/**/*.d.ts',
+        to: __dirname + '/dist'
+      }
+    ])
   ])
 }
